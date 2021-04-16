@@ -1,11 +1,9 @@
-##pull test
-##push test
-##push test 2
 from flask import Flask, render_template, request
 import psycopg2
+import hashlib
 
 app = Flask(__name__)
-con = psycopg2.connect(database="kwitter", user="troyalfelt", password="Matlock",
+con = psycopg2.connect(database="kwitter", user="akesh201", password="Matlock",
 host ="127.0.0.1", port="5432")
 print("hey it actually worked")
 
@@ -14,6 +12,8 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        hashed = hashlib.sha3_512(password.encode())
+        password = hashed.hexdigest()
         cur = con.cursor()
         cur.execute("""SELECT * FROM users WHERE user_name = %s""", (username,))
         account = cur.fetchone()
