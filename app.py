@@ -41,8 +41,7 @@ def login():
             return res
 
         else:
-            var = make_response("Value of cookie is {}".format(request.cookies.get('name')))
-            print(var)
+            print("Incorrect username/password")
 
     return render_template('/index.html')
 
@@ -59,5 +58,3 @@ def leave():
 
 if __name__ == '__main__':
     app.run(debug = True)
-
-usr = request.cookies.get('name')
