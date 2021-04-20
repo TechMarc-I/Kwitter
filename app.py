@@ -1,7 +1,7 @@
 ##pull test
 ##push test
 ##push test 2
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, redirect
 import psycopg2, hashlib, os
 
 
@@ -35,7 +35,7 @@ def register():
             cur.execute("""INSERT INTO users VALUES (%s, %s, %s)""", (username, password, email))
             con.commit()
             print("Success!")
-            res = make_response(render_template('/home.html'))
+            res = make_response(redirect('/login'))
             res.set_cookie('name', username, max_age = 60&60*1200)
             return res
         else:
@@ -56,7 +56,7 @@ def login():
         account = cur.fetchone()
         if account:
             print(username)
-            res = make_response(render_template('/home.html'))
+            res = make_response(redirect('/home'))
             res.set_cookie('name', username, max_age = 60*60*2*600)
             usr = request.cookies.get('name')
             print(usr)
@@ -65,11 +65,11 @@ def login():
         else:
             print("Incorrect username/password")
 
-    return render_template('/login.html')
+    return render_template('/index.html')
 
 @app.route('/logout')
 def leave():
-    res = make_response(render_template('home.html'))
+    res = make_response(redirect('/login'))
     res.set_cookie('name', '', expires=0)
     return res
 
