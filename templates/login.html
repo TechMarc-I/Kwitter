@@ -1,0 +1,85 @@
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Kwitter - Login</title>
+	<style>
+		*,
+		*::after,
+		*::before {
+			box-sizing: border-box;
+			margin: 0 auto;
+			padding: 0;
+			font-size: 16px;
+		}
+
+		#logo {
+			display: block;
+			padding: 1.5em;
+			border-bottom: 0.1em solid black;
+		}
+
+		#body-spacer {
+			display: flex;
+			align-items: center;
+			justify-content: space-around;
+			height: 34em;
+		}
+
+		#login-container {
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			border: 0.1em solid black;
+			padding: 1em;
+		}
+		#login-container * {
+			margin: 2.2em 1.5em;
+			padding: 0.2em;
+		}
+
+		#flav-text {
+			display: none;
+		}
+
+		@media screen and (min-width: 725px) {
+			*,
+			*::after,
+			*::before {
+				font-size: 16px;
+			}
+			#body-spacer * {
+				margin: 1em 2vw;
+			}
+			#flav-text {
+				display: inline;
+				width: 60%;
+				font-style: oblique;
+				font-size: larger;
+				padding: 0 1em;
+			}
+			#login-container {
+				width: 30vw;
+			}
+		}
+	</style>
+</head>
+<body>
+	<img id="logo" src="logo.png">
+	<div id="body-spacer">
+		<div id="flav-text">
+			Cheesy texts about how we care about the crap you rant about.
+		</div>
+		<form action="/login" method="POST" id="login-container">
+      <p>Input Username</p>
+      <input type="text" name="username" placeholder="Username">
+      <p>Input Password</p>
+			<input type="text" name="password" placeholder="Password">
+			<input type="submit" value="Log In">
+		</form>
+	</div>
+</body>
+</html>
