@@ -6,14 +6,29 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Kwitter - Login</title>
+  <style>
+    #post_box {
+      width: 80%;
+      height: 500px;
+    }
+  </style>
+
 </head>
 <body>
   <h1>This will be the homepage</h1>
   {% if request.cookies.get('name') != None %}
   <h2>Welcome {{ request.cookies.get('name') }}</h2>
+  <h2>Your id number is {{ request.cookies.get('id') }}</h2>
+  <br/>
+  <form action='/make_post' method='POST'>
+    <input name="post_space" type="text" placeholder="Post your deranged rants here" id="post_box"/>
+    <input type='submit' value="Post"/>
+  </form>
   <a href="/logout">Log Out</a>
   {% else %}
   <a href="/login">Login</a>
+  <a href="/create">Create account</a>
   {% endif %}
+
 </body>
 </html>
