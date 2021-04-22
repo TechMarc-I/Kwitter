@@ -14,11 +14,17 @@ host ="127.0.0.1", port="5432")
 
 print("hey it actually worked")
 
+class Post:
+    def __init__(self, id_num, usr, post_con):
+        self.id_num = id_num
+        self.usr = usr
+        self.post_con = post_con
+
 @app.route('/')
 def home():
     usr = request.cookies.get('name')
     print(usr)
-    return render_template('/home.html')
+    return redirect('/home')
 
 @app.route('/create', methods = ['GET', 'POST'])
 def register():
@@ -102,13 +108,32 @@ def pst():
             cur.execute("""INSERT INTO posts(id, user_name, post) VALUES(%s, %s, %s)""", (id, username, post))
             con.commit()
             print("frick yeah")
-    return render_template('/home.html')
+    return redirect('/home')
 
 @app.route('/home')
 def main():
-    print(request.cookies.get('name'))
-    print(request.cookies.get('id'))
-    return render_template('/home.html')
+    dict = []
+    cur = con.cursor()
+    cur.execute("""SELECT post FROM posts""")
+    all_posts = cur.fetchall()
+    for i in all_posts:
+        cur.execute("""SELECT id FROM posts WHERE post = %s""", (i))
+        id = cur.fetchone()
+        cur.execute(""" SELECT user_name FROM posts WHERE post = %s""", (i))
+        name = cur.fetchone()
+        x = Post(id, name, i)
+        dict.append(x)
+    return render_template('/home.html', all_posts = all_posts, dict = dict)
+
+@app.route('/delete/<post>', methods = ['POST'])
+def remove(post):
+    cur = con.cursor()
+    cur.execute("""DELETE FROM posts WHERE post = %s""", (post,))
+    con.commit()
+    print("yeyeyeye")
+    return redirect('/home')
+
+
 
 
 
