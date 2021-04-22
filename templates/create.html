@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Sign Up / Kwitter</title>
+{% endblock %}
+
+{% block body %}
+<img id="logo" src="logo.png">
+<div id="body-spacer">
+	<div id="flav-text">
+		Cheesy texts about how we care about the crap you rant about.
+	</div>
+
+    <div id="login-container">
+        <h1>Sign-Up</h1>
+        <form action-="/create" method="POST" id="login-form">
+            <input type="text" name="email" placeholder="Enter Email Address">
+            <input type="text" name="username" placeholder="Create Username">
+            <input type="password" name="password" placeholder="Create Password">
+            <input type="password" name="confirm" placeholder="Confirm Password">
+            <input type="submit" value="Sign Up">
+        </form>
+    </div>
+</div>
+{% endblock %}
