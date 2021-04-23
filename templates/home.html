@@ -29,6 +29,27 @@
   <a href="/login">Login</a>
   <a href="/create">Create account</a>
   {% endif %}
-
+  <table>
+    <tr>
+      <th>Posts</th>
+    </tr>
+    {% if dict %}
+      {% for i in dict %}
+    <tr>
+      <td>{{ i[2] }}</td>
+      <td>{{ i[3] }}</td>
+      {% if i[2] == request.cookies.get('name') or request.cookies.get('name') == 'admin' %}
+        <td>
+          <form action='/delete/{{ i[0] }}' method="POST">
+            <input type='submit' value='Delete'/>
+          </form>
+        </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  {% else %}
+  <h1>There are no posts</h1>
+  {% endif %}
+  </table>
 </body>
 </html>

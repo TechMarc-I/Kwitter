@@ -10,10 +10,14 @@
 	<div id="flav-text">
 		Cheesy texts about how we care about the crap you rant about.
 	</div>
-	<form id="login-container">
-		<input type="text" placeholder="Username">
-		<input type="text" placeholder="Password">
-		<input type="submit" value="Log In">
-	</form>
+	<div id="login-container">
+		<form action-="/login" method="POST" id="login-form">
+			<input type="text" name="username" placeholder="Username">
+			<input type="password" name="password" placeholder="Password">
+			<input type="submit" value="Log In">
+		</form>
+		<p>Don't have an account already?</p>
+		<a href='/create'>Create Account</a>
+	</div>
 </div>
 {% endblock %}
