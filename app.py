@@ -5,7 +5,7 @@ import psycopg2, hashlib, os
 
 
 app = Flask(__name__)
-con = psycopg2.connect(database="kwitter", user="troyalfelt", password="Matlock",
+con = psycopg2.connect(database="kwitter", user="akesh201", password="Matlock",
 host ="127.0.0.1", port="5432")
 
 pepper = r'e_XT<tUB%"Gg4F\or57i{^&MAcAaiH@-z|T&y3w8#HTcp~8GcS9K{Y&x?ZC_dxi}*m<T0sr{in\"SDf2\_\6$*{gqe>E2yDZ]}XJ'
@@ -62,20 +62,25 @@ def login():
     print(usr)
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
         cur = con.cursor()
-        cur.execute("""SELECT salt FROM users WHERE user_name = %s""", (username,))
-        salt = cur.fetchone()
-        cur.execute("""SELECT password FROM users WHERE user_name = %s""", (username,))
-        password = cur.fetchone()
-        if password and password[0] == hashlib.sha256((request.form['password'] + salt[0] + pepper).encode('utf-8')).hexdigest():
+        cur.execute("""SELECT user_name, password, salt FROM users WHERE user_name = %s OR email = %s""", (username, username))
+        user_info = cur.fetchall()
+        if user_info:
+            username = user_info[0][0]
+            password = user_info[0][1]
+            salt = user_info[0][2]
+        else:
+            username = None
+            password = None
+            salt = None
+
+        if password and password == hashlib.sha256((request.form['password'] + salt + pepper).encode('utf-8')).hexdigest():
             print(username)
             res = make_response(redirect('/home'))
             res.set_cookie('name', username, max_age = 60*60*2*600)
             usr = request.cookies.get('name')
             print(usr)
             return res
-
         else:
             print("Incorrect username/password")
 
