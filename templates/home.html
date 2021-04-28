@@ -1,88 +1,69 @@
+{% extends base.html %}
 
-<!DOCTYPE HTML>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Kwitter - Login</title>
-  <style>
-    #post_box {
-      width: 80%;
-      height: 500px;
-    }
+{% block head %}
+<title>Kwitter - Login</title>
+{% endblock %}
 
-    table {
-      border-color: black;
-      border-style: solid;
-    }
-    tr {
-      border-color: black;
-      border-style: solid;
-    }
-    td {
-      border-color: black;
-      border-style: solid;
-    }
-  </style>
+{% block body %}
+<h1>This will be the homepage</h1>
+{% if request.cookies.get('name') != None %}
+<h2>Welcome {{ request.cookies.get('name') }}</h2>
+<h2>Your id number is {{ request.cookies.get('id') }}</h2>
+<br/>
+<form action='/make_post' method='POST'>
+  <input name="post_space" type="text" placeholder="Post your deranged rants here" id="post_box"/>
+  <input type='submit' value="Post"/>
+</form>
 
-</head>
-<body>
-  <h1>This will be the homepage</h1>
-  {% if request.cookies.get('name') != None %}
-  <h2>Welcome {{ request.cookies.get('name') }}</h2>
-  <h2>Your id number is {{ request.cookies.get('id') }}</h2>
-  <br/>
-  <form action='/make_post' method='POST'>
-    <input name="post_space" type="text" placeholder="Post your deranged rants here" id="post_box"/>
-    <input type='submit' value="Post"/>
-  </form>
-  <a href="/logout">Log Out</a>
-  {% else %}
-  <a href="/login">Login</a>
-  <a href="/create">Create account</a>
-  {% endif %}
-  <table>
-    <tr>
-      <th>Posts</th>
-    </tr>
-    {% if posts %}
-      {% for i in posts %}
-    <tr>
-      <td><a href="/profile/{{ i[2] }}"">{{ i[2] }}</a></td>
-      <td><h2>{{ i[3] }}</h2></td>
+<a href="/logout">Log Out</a>
+
+{% else %}
+<a href="/login">Login</a>
+<a href="/create">Create account</a>
+{% endif %}
+
+<table>
+  <tr>
+    <th>Posts</th>
+  </tr>
+  {% if posts %}
+    {% for i in posts %}
+  <tr>
+    <td><a href="/profile/{{ i[2] }}">{{ i[2] }}</a></td>
+    <td><h2>{{ i[3] }}</h2></td>
+    <td>
+      <form action="/comment/{{ i[0] }}" method="POST">
+      <input type="text" name="comment" placeholder="Post a comment"/>
+      <input type="submit" value="Post"/>
+      </form>
+    </td>
+    {% if i[2] == request.cookies.get('name') or request.cookies.get('name') == 'admin' %}
       <td>
-        <form action="/comment/{{ i[0] }}" method="POST">
-        <input type="text" name="comment" placeholder="Post a comment"/>
-        <input type="submit" value="Post"/>
+        <form action='/delete/pst/{{ i[0] }}' method="POST">
+          <input type='submit' value='Delete'/>
         </form>
       </td>
-      {% if i[2] == request.cookies.get('name') or request.cookies.get('name') == 'admin' %}
-        <td>
-          <form action='/delete/pst/{{ i[0] }}' method="POST">
-            <input type='submit' value='Delete'/>
-          </form>
-        </td>
-      {% endif %}
-      {% for x in comments %}
-      {% if x[2] == i[0] %}
-        <tr>
-          <td>{{ x[4] }}</td>
-          <td><a href="profile/{{ i[3]}}">{{ x[3]}}</a></td>
-            {% if x[3] == request.cookies.get('name') or request.cookies.get('name') == 'admin' %}
-            <td>
-              <form action='/delete/comment/{{ x[0] }}' method="POST">
-                <input type='submit' value='Delete'/>
-              </form>
-            </td>
-            {% endif %}
-        </tr>
-      {% endif %}
-    {% endfor %}
+    {% endif %}
+    {% for x in comments %}
+    {% if x[2] == i[0] %}
+      <tr>
+        <td>{{ x[4] }}</td>
+        <td><a href="profile/{{ i[3]}}">{{ x[3]}}</a></td>
+          {% if x[3] == request.cookies.get('name') or request.cookies.get('name') == 'admin' %}
+          <td>
+            <form action='/delete/comment/{{ x[0] }}' method="POST">
+              <input type='submit' value='Delete'/>
+            </form>
+          </td>
+          {% endif %}
+      </tr>
+    {% endif %}
   {% endfor %}
-  {% else %}
-  <h1>There are no posts</h1>
-  {% endif %}
-  </table>
-</body>
-</html>
+{% endfor %}
+{% else %}
+<h1>There are no posts</h1>
+{% endif %}
+</table>
+
+{% endblock %}
+

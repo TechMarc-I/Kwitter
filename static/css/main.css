@@ -38,8 +38,26 @@ h1 {
 }
 
 #flav-text {
-    display: none;
+                    display: none;
 }
+
+#post_box {
+    width: 80%;
+    height: 500px;
+  }
+
+  table {
+    border-color: black;
+    border-style: solid;
+  }
+  tr {
+    border-color: black;
+    border-style: solid;
+  }
+  td {
+    border-color: black;
+    border-style: solid;
+  }
 
 @media screen and (min-width: 725px) {
     *,
