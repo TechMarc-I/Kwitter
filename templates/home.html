@@ -1,5 +1,7 @@
-{% extends base.html %}
 
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
 {% block head %}
 <title>Kwitter - Login</title>
 {% endblock %}
@@ -8,7 +10,9 @@
 <h1>This will be the homepage</h1>
 {% if request.cookies.get('name') != None %}
 <h2>Welcome {{ request.cookies.get('name') }}</h2>
-<h2>Your id number is {{ request.cookies.get('id') }}</h2>
+{% if message_count %}
+<h2>You have {{ message_count }} messages</h2>
+{% endif %}
 <br/>
 <form action='/make_post' method='POST'>
   <input name="post_space" type="text" placeholder="Post your deranged rants here" id="post_box"/>
@@ -48,7 +52,7 @@
     {% if x[2] == i[0] %}
       <tr>
         <td>{{ x[4] }}</td>
-        <td><a href="profile/{{ i[3]}}">{{ x[3]}}</a></td>
+        <td><a href="profile/{{ x[3]}}">{{ x[3]}}</a></td>
           {% if x[3] == request.cookies.get('name') or request.cookies.get('name') == 'admin' %}
           <td>
             <form action='/delete/comment/{{ x[0] }}' method="POST">
@@ -66,4 +70,3 @@
 </table>
 
 {% endblock %}
-

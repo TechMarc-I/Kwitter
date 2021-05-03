@@ -35,6 +35,13 @@ host ="127.0.0.1", port="5432")
 ##	FOREIGN KEY(id) REFERENCES users(id),
 ##	FOREIGN KEY(post_id) REFERENCES posts(post_id)
 ##	);
+##  CREATE TABLE messages (
+## message_id bigserial,
+## sender varchar(50),
+## receiver varchar(50),
+## message varchar(280)
+##);
+
 
 pepper = r'e_XT<tUB%"Gg4F\or57i{^&MAcAaiH@-z|T&y3w8#HTcp~8GcS9K{Y&x?ZC_dxi}*m<T0sr{in\"SDf2\_\6$*{gqe>E2yDZ]}XJ'
 
@@ -42,7 +49,7 @@ pepper = r'e_XT<tUB%"Gg4F\or57i{^&MAcAaiH@-z|T&y3w8#HTcp~8GcS9K{Y&x?ZC_dxi}*m<T0
 
 @app.route('/')
 def home():
-    return render_template('/home.html')
+    return redirect('/home')
 
 @app.route('/create', methods = ['GET', 'POST'])
 def register():
@@ -59,8 +66,8 @@ def register():
         email_used = cur.fetchone()
         if account:
             print('Account already exists')
-        elif not validate_email(email, check_mx=True):
-            print('Invalid email address')
+        ##elif not validate_email(email, check_mx=True):
+        ##    print('Invalid email address')
         elif email_used:
             print('Email address already in use')
 
@@ -151,7 +158,10 @@ def main():
     posts = cur.fetchall()
     cur.execute("""SELECT * FROM comments""")
     comments = cur.fetchall()
-    return render_template('/home.html', posts = posts, comments = comments)
+    cur.execute("""SELECT * FROM messages WHERE receiver = %s""", (request.cookies.get('name'),))
+    messages = cur.fetchall()
+    message_count = len(messages)
+    return render_template('/home.html', posts = posts, comments = comments, message_count = message_count)
 
 @app.route('/delete/<type>/<id_num>', methods = ['POST'])
 def remove(type, id_num):
@@ -162,14 +172,17 @@ def remove(type, id_num):
             con.commit()
             cur.execute("""DELETE FROM posts WHERE post_id = %s""", (id_num,))
             con.commit()
-            print("this deletes a post without comments")
             return redirect('/home')
         elif type == "comment":
             cur = con.cursor()
             cur.execute("""DELETE FROM comments WHERE comment_id = %s""", (id_num,))
             con.commit()
-            print("this delets a comment")
             return redirect('/home')
+        elif type == "message":
+            cur = con.cursor()
+            cur.execute("""DELETE FROM messages WHERE message_id = %s""", (id_num))
+            con.commit()
+            return redirect('/profile/' + request.cookies.get('name'))
     return redirect('/home')
 
 @app.route('/comment/<post_id>', methods = ['POST'])
@@ -190,7 +203,20 @@ def render(user):
     cur.execute("""SELECT * FROM posts WHERE user_name = %s""", (user,))
     all_posts = cur.fetchall()
     print(all_posts)
-    return render_template('/profile.html', all_posts = all_posts, user = user)
+    cur.execute("""SELECT * FROM messages WHERE receiver = %s""", (user,))
+    all_messages = cur.fetchall()
+    return render_template('/profile.html', all_posts = all_posts, all_messages = all_messages, user = user)
+
+@app.route('/message/<receiver>', methods = ["POST"])
+def send(receiver):
+    if request.method == "POST":
+        sender = request.cookies.get('name')
+        message = request.form['message']
+        cur = con.cursor()
+        cur.execute("""INSERT INTO messages(sender, receiver, message) VALUES(%s, %s, %s)""", (request.cookies.get('name'), receiver, message))
+        con.commit()
+    return redirect("/profile/" + receiver)
+
 
 
 

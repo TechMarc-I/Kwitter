@@ -71,7 +71,9 @@
 	<img id="logo" src="logo.png">
   {% if all_posts %}
     <table>
-      <tr>Posts by {{ user }}</tr>
+      <tr>
+        <td>Posts by {{ user }}</td>
+      </tr>
       {% for i in all_posts %}
       <tr>
       <td>{{ i[3] }}</td>
@@ -81,6 +83,36 @@
   {% else %}
   <h1>This person hasn't made any posts yet</h1>
   {% endif %}
+
+
+{% if user == request.cookies.get('name') %}
+  {% if all_messages %}
+  <table>
+    <tr>
+      <td>Your Messages</td>
+    </tr>
+    {% for y in all_messages %}
+    <tr>
+      <td>{{ y[3] }}</td>
+      <td>{{ y[1] }}</td>
+      <td>
+        <form action="/delete/message/{{ y[0] }}" method='POST'>
+          <input type="submit" value="Delete"/>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  {% else %}
+  <h2>You don't have any messages right now</h2>
+  {% endif %}
+{% elif request.cookies.get('name') != None %}
+<h1>Send {{ user }} a message</h1>
+  <form action="/message/{{ user }}" method='POST'>
+    <input type="text" name="message" placholder="Type your message here"/>
+    <input type="submit" value="Send Message"/>
+  </form>
+{% endif %}
+
 
 
 
