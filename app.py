@@ -6,7 +6,7 @@ import psycopg2, hashlib, os
 
 app = Flask(__name__)
 
-con = psycopg2.connect(database="kwitter", user="troyalfelt", password="Matlock",
+con = psycopg2.connect(database="kwitter", user="akesh201", password="Matlock",
 host ="127.0.0.1", port="5432")
 
 ##CREATE TABLE users (
@@ -134,24 +134,26 @@ def leave():
 @app.route('/make_post', methods = ['POST'])
 def pst():
     if request.method == "POST":
-        if request.cookies.get('name') != None and request.cookies.get('id') != None:
-            username = request.cookies.get('name')
-            id = int(request.cookies.get('id'))
-            print(id)
-            post = request.form['post_space']
-            cur = con.cursor()
-            cur.execute("""INSERT INTO posts(id, user_name, post) VALUES(%s, %s, %s)""", (id, username, post))
-            con.commit()
+        username = request.cookies.get('name')
+        id = int(request.cookies.get('id'))
+        print(id)
+        post = request.form['post_space']
+        cur = con.cursor()
+        cur.execute("""INSERT INTO posts(id, user_name, post) VALUES(%s, %s, %s)""", (id, username, post))
+        con.commit()
     return redirect('/home')
 
 @app.route('/home')
 def main():
+    id = request.cookies.get('id')
     cur = con.cursor()
     cur.execute("""SELECT * FROM posts""")
     posts = cur.fetchall()
     cur.execute("""SELECT * FROM comments""")
     comments = cur.fetchall()
-    return render_template('/home.html', posts = posts, comments = comments)
+    cur.execute("""SELECT post_id FROM likes WHERE user_id = %s""", (id))
+    likes = cur.fetchall()
+    return render_template('/home.html', posts = posts, comments = comments, likes = likes)
 
 @app.route('/delete/<type>/<id_num>', methods = ['POST'])
 def remove(type, id_num):
@@ -191,6 +193,17 @@ def render(user):
     all_posts = cur.fetchall()
     print(all_posts)
     return render_template('/profile.html', all_posts = all_posts, user = user)
+
+@app.route('/like', methods=['GET', 'POST'])
+def like():
+    if request.method == "POST":
+        id = request.cookies.get('id')
+        post_id = int(request.form['post-id'])
+        cur = con.cursor()
+        cur.execute("""INSERT INTO likes(post_id, user_id) VALUES(%s, %s)""", (post_id, id))
+        con.commit()
+        print("liked")
+    return redirect('/home')
 
 
 
