@@ -146,14 +146,23 @@ def pst():
 @app.route('/home')
 def main():
     id = request.cookies.get('id')
+    is_liked = []
     cur = con.cursor()
     cur.execute("""SELECT * FROM posts""")
     posts = cur.fetchall()
+    for post in posts:
+        cur.execute("""SELECT * FROM likes WHERE post_id = %s AND user_id = %s""", (post[0], id))
+        liked = cur.fetchone()
+        if liked:
+            is_liked.append(True)
+        else:
+            is_liked.append(False)
+    print(is_liked)
     cur.execute("""SELECT * FROM comments""")
     comments = cur.fetchall()
-    cur.execute("""SELECT post_id FROM likes WHERE user_id = %s""", (id))
-    likes = cur.fetchall()
-    return render_template('/home.html', posts = posts, comments = comments, likes = likes)
+    ##cur.execute("""SELECT COUNT(*) FROM likes WHERE user_id = %s""", (id))
+    ##likes = cur.fetchall()
+    return render_template('/home.html', posts = posts, comments = comments, is_liked = is_liked)
 
 @app.route('/delete/<type>/<id_num>', methods = ['POST'])
 def remove(type, id_num):
@@ -202,7 +211,18 @@ def like():
         cur = con.cursor()
         cur.execute("""INSERT INTO likes(post_id, user_id) VALUES(%s, %s)""", (post_id, id))
         con.commit()
-        print("liked")
+        print(id)
+    return redirect('/home')
+
+@app.route('/unlike', methods=['GET', 'POST'])
+def unlike():
+    if request.method == "POST":
+        id = request.cookies.get('id')
+        post_id = int(request.form['post-id'])
+        cur = con.cursor()
+        cur.execute("""DELETE FROM likes WHERE post_id = %s AND user_id = %s""", (post_id, id))
+        con.commit()
+        print("unliked")
     return redirect('/home')
 
 

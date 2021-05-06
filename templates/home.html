@@ -35,6 +35,19 @@
       <input type="submit" value="Post"/>
       </form>
     </td>
+    <td>
+      {% if is_liked[loop.index0] %}
+      <form action='/unlike' method="POST">
+        <input type='hidden' name='post-id' value='{{ i[0] }}'/>
+        <button type='submit' value='unlike'>Unlike</button>
+      </form>
+      {% else %}
+      <form action='/like' method="POST">
+        <input type='hidden' name='post-id' value='{{ i[0] }}'/>
+        <button type='submit' value='like'>Like</button>
+      </form>
+      {% endif %}
+    </td>
     {% if i[2] == request.cookies.get('name') or request.cookies.get('name') == 'admin' %}
       <td>
         <form action='/delete/pst/{{ i[0] }}' method="POST">
@@ -42,10 +55,6 @@
         </form>
       </td>
     {% endif %}
-    <form action='/like' method="POST">
-      <input type='text' name='post-id' value='{{ i[0] }}'/>
-      <button type='submit' value='like'>Like</button>
-    </form>
     {% for x in comments %}
     {% if x[2] == i[0] %}
       <tr>
