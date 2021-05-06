@@ -162,7 +162,7 @@ def main():
     comments = cur.fetchall()
     ##cur.execute("""SELECT COUNT(*) FROM likes WHERE user_id = %s""", (id))
     ##likes = cur.fetchall()
-    return render_template('/home.html', posts = posts, comments = comments, is_liked = is_liked)
+    return render_template('/home.html', posts = posts, comments = comments, is_liked = is_liked, id = id)
 
 @app.route('/delete/<type>/<id_num>', methods = ['POST'])
 def remove(type, id_num):

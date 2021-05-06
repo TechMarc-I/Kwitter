@@ -29,6 +29,7 @@
   <tr>
     <td><a href="/profile/{{ i[2] }}">{{ i[2] }}</a></td>
     <td><h2>{{ i[3] }}</h2></td>
+    {% if id %}
     <td>
       <form action="/comment/{{ i[0] }}" method="POST">
       <input type="text" name="comment" placeholder="Post a comment"/>
@@ -48,6 +49,7 @@
       </form>
       {% endif %}
     </td>
+    {% endif %}
     {% if i[2] == request.cookies.get('name') or request.cookies.get('name') == 'admin' %}
       <td>
         <form action='/delete/pst/{{ i[0] }}' method="POST">
