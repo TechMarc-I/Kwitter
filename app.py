@@ -117,9 +117,6 @@ def set_id():
     cur.execute("""SELECT id FROM users WHERE user_name = %s""", (username,))
     tupl = cur.fetchone()
     id = str(tupl[0])
-    print("here it is")
-    print(id)
-    print(type(id))
     res.set_cookie('id', id, max_age = 1200000000)
     return res
 
@@ -147,6 +144,7 @@ def pst():
 def main():
     id = request.cookies.get('id')
     is_liked = []
+    likes = []
     cur = con.cursor()
     cur.execute("""SELECT * FROM posts""")
     posts = cur.fetchall()
@@ -157,12 +155,15 @@ def main():
             is_liked.append(True)
         else:
             is_liked.append(False)
-    print(is_liked)
+        cur.execute("""SELECT count(*) FROM likes WHERE post_id = %s""", (post[0], ))
+        likes.append(cur.fetchone())
+        print(likes[0][0])
+
     cur.execute("""SELECT * FROM comments""")
     comments = cur.fetchall()
     ##cur.execute("""SELECT COUNT(*) FROM likes WHERE user_id = %s""", (id))
     ##likes = cur.fetchall()
-    return render_template('/home.html', posts = posts, comments = comments, is_liked = is_liked, id = id)
+    return render_template('/home.html', posts = posts, comments = comments, is_liked = is_liked, id = id, likes = likes)
 
 @app.route('/delete/<type>/<id_num>', methods = ['POST'])
 def remove(type, id_num):

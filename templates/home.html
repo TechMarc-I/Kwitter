@@ -40,12 +40,12 @@
       {% if is_liked[loop.index0] %}
       <form action='/unlike' method="POST">
         <input type='hidden' name='post-id' value='{{ i[0] }}'/>
-        <button type='submit' value='unlike'>Unlike</button>
+        <button type='submit' value='unlike'>Unlike ({{ likes[loop.index0][0] }})</button>
       </form>
       {% else %}
       <form action='/like' method="POST">
         <input type='hidden' name='post-id' value='{{ i[0] }}'/>
-        <button type='submit' value='like'>Like</button>
+        <button type='submit' value='like'>Like  ({{ likes[loop.index0][0] }})</button>
       </form>
       {% endif %}
     </td>
