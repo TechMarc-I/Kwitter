@@ -5,22 +5,26 @@
 {% endblock %}
 
 {% block body %}
-<img id="logo" src="logo.png">
+<img class="logo" src="/static/birds.jpg"/>
 <div id="body-spacer">
 	<div id="flav-text">
-		Cheesy texts about how we care about the crap you rant about.
+		Here at Kwitter, we care when noboy else does. Tell us what's on your mind.
 	</div>
 
-    <div id="login-container">
+    <div id="create-container">
         <h1>Sign-Up</h1>
-        <form action-="/create" method="POST" id="login-form">
+        <form class="login_form" action-="/create" method="POST" id="login-form">
             <input type="text" name="email" placeholder="Enter Email Address">
             <input type="text" name="username" placeholder="Create Username">
             <input type="password" name="password" placeholder="Create Password">
             <input type="password" name="confirm" placeholder="Confirm Password">
             <input type="submit" value="Sign Up">
         </form>
+				{% if message != None %}
+					<h1>{{ message }}</h1>
+				{% endif %}
 				<a href="/login">Log in to existing account</a>
+				<a href="/home">Return home</a>
     </div>
 </div>
 {% endblock %}

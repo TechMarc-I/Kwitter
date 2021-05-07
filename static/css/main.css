@@ -6,7 +6,9 @@
     padding: 0;
     font-size: 16px;
 }
-
+body {
+  background-color: tan;
+}
 h1 {
     text-align: center;
     font-size: 1.5em;
@@ -29,10 +31,22 @@ h1 {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    background-color: beige;
     border: 0.1em solid black;
     padding: 1em;
 }
 #login-container * {
+    margin: 2.2em 1.5em;
+    padding: 0.2em;
+}
+#create-container {
+    display: flex;
+    background-color: beige;
+    flex-direction: column;
+    border: 0.1em solid black;
+    padding: 1em;
+}
+#create-container * {
     margin: 2.2em 1.5em;
     padding: 0.2em;
 }
@@ -41,14 +55,85 @@ h1 {
                     display: none;
 }
 
-#post_box {
-    width: 80%;
-    height: 500px;
+.header {
+			display: flex;
+			flex-direction: column;
+      align-items: center;
+      background-color: khaki;
+      width: 100%;
+      border-bottom-style: solid;
+      border-color: grey;
+}
+
+
+    .post {
+			border: 1px solid black;
+			border-radius: 5px;
+			width: 90%;
+			min-height: 6em;
+			margin-bottom: 1em;
+		}
+
+    .post b {
+			display: block;
+			border-bottom: 1px solid black;
+			padding: 0.5em 1em;
+			display: block;
+		}
+
+    .post .post-content {
+			padding: 1em;
+			display: block;
+			/* height: 200px; */
+		}
+
+    #name {
+    			border: 1px solid black;
+    			border-radius: 15px;
+    			padding: 1em;
+    			width: 95%;
+    			font-weight: bold;
+    			font-size: 1.3em;
+    			border-bottom: none;
+    		}
+
+.post_box {
+    width: 400px;
+    height: 150px;
+  }
+#messages {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+th {
+  display: flex;
+  justify-content: center;
+}
+.login_form {
+  	margin: 1em auto;
+  	display: flex;
+    flex-direction: column;
+    background-color: white;
+  	justify-content: space-between;
+  	align-items: flex-start;
+  	width: 95%;
+  	padding: 1em;
+  	border: 1px solid black;
   }
 
   table {
     border-color: black;
     border-style: solid;
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    align-items: center;
+
+  }
+  tbody {
+    width: 100%;
   }
   tr {
     border-color: black;
@@ -57,8 +142,76 @@ h1 {
   td {
     border-color: black;
     border-style: solid;
+    padding: 5px;
   }
+.table_span {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  border-style: solid;
+  border-color: green;
+}
+.comment_span {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  border-style: solid;
+  border-color: green;
+}
+.table_spanner {
+  display: flex;
+  justify-content: center;
+  align-items: center;;
+  width: 100%;
 
+
+}
+.table_id {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+}
+
+.delete {
+  display: flex;
+  justify-content: center;
+
+}
+form {
+  dipslay: flex;
+  justify-content: center;
+}
+.center {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  align-items: center;
+}
+table {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  padding: 7px;
+}
+.head_txt {
+  margin-top: 5px;
+  margin-bottom: 8px;
+}
+#send_message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100px;
+  width: 100px;
+  border-radius: 25%;
+}
 @media screen and (min-width: 725px) {
     *,
     *::after,

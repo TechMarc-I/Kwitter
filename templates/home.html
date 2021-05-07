@@ -1,61 +1,105 @@
-{% extends base.html %}
+{% extends "base.html" %}
 
 {% block head %}
 <title>Kwitter - Login</title>
 {% endblock %}
 
 {% block body %}
-<h1>This will be the homepage</h1>
+<img class="logo" src="/static/birds.jpg"/>
+<div class="header">
+
+<h1 class="head_txt">Kwitter</h1>
 {% if request.cookies.get('name') != None %}
-<h2>Welcome {{ request.cookies.get('name') }}</h2>
-<h2>Your id number is {{ request.cookies.get('id') }}</h2>
+<h2 class="head_txt">Welcome <a href="/profile/{{ request.cookies.get('name') }}">{{ request.cookies.get('name') }}</a></h2>
+{% if message_count %}
+<h2 class="head_txt">You have {{ message_count }} messages</h2>
+{% endif %}
+<a href="/logout" class="head_txt">Log Out</a>
+{% else %}
+<a href="/login" class="head_txt">Login</a>
+<a href="/create" class="head_txt">Create account</a>
+{% endif %}
+</div>
 <br/>
+{% if request.cookies.get('name') != None %}
+<div class="center">
 <form action='/make_post' method='POST'>
-  <input name="post_space" type="text" placeholder="Post your deranged rants here" id="post_box"/>
+  <input class="post_box" name="post_space" type="text" placeholder="Post your deranged rants here" id="post_box"/>
   <input type='submit' value="Post"/>
 </form>
-
-<a href="/logout">Log Out</a>
-
-{% else %}
-<a href="/login">Login</a>
-<a href="/create">Create account</a>
+</div>
 {% endif %}
 
 <table>
-  <tr>
-    <th>Posts</th>
+  <tr class="table_span">
+    <th class="table_spanner"><h1>Posts</h1></th>
   </tr>
   {% if posts %}
     {% for i in posts %}
-  <tr>
-    <td><a href="/profile/{{ i[2] }}">{{ i[2] }}</a></td>
-    <td><h2>{{ i[3] }}</h2></td>
-    <td>
+      {% set count = [] %}
+      {% for z in likes %}
+      {% if z[0] == i[0] %}
+        {% set x = count.append(1) %}
+      {% endif %}
+    {% endfor %}
+  <tr class="table_span">
+    <td class="table_id"><a href="/profile/{{ i[2] }}">{{ i[2] }}</a></td>
+    <td class="table_spanner"><h1>{{ i[3] }}</h1></td>
+    <td class="like_box">Likes: {{ count|length }}</td>
+    {% if i[2] == request.cookies.get('name') or request.cookies.get('name') == 'admin' %}
+      <td class="table_id">
+        <form class="delete" action='/delete/pst/{{ i[0] }}' method="POST">
+          <input type='submit' value='Delete'/>
+        </form>
+      </td>
+    {% elif request.cookies.get('name') != None %}
+      {% set checker = [] %}
+        {% for w in likes %}
+          {% if w[0] == i[0] %}
+            <td class="table_id">
+              <form action='/unlike' method="POST">
+                <input type='hidden' name='post-id' value='{{ i[0] }}'/>
+                <button type='submit' value='unlike'>Unlike</button>
+              </form>
+            </td>
+          {% set y = checker.append(1) %}
+         {% endif %}
+      {% endfor %}
+      {% if checker|length == 0 %}
+      <td class="table_id">
+        <form action="/like" method="POST">
+          <input type='hidden' name='post-id' value='{{ i[0]}}'/>
+          <button type="submit" value="like">Like</button>
+        </form>
+      </td>
+      {% endif %}
+
+    {% endif %}
+   </tr>
+{% if request.cookies.get('name') != None %}
+  <tr class="table_span">
+    <td class="table_spanner">
       <form action="/comment/{{ i[0] }}" method="POST">
       <input type="text" name="comment" placeholder="Post a comment"/>
       <input type="submit" value="Post"/>
       </form>
     </td>
-    {% if i[2] == request.cookies.get('name') or request.cookies.get('name') == 'admin' %}
-      <td>
-        <form action='/delete/pst/{{ i[0] }}' method="POST">
-          <input type='submit' value='Delete'/>
-        </form>
-      </td>
-    {% endif %}
+  </tr>
+{% endif %}
+
     {% for x in comments %}
-    {% if x[2] == i[0] %}
-      <tr>
-        <td>{{ x[4] }}</td>
-        <td><a href="profile/{{ i[3]}}">{{ x[3]}}</a></td>
+      {% if x[2] == i[0] %}
+      <tr class="comment_span">
+        <td class="table_id"><a href="/profile/{{ x[3] }}">{{ x[3]}}</a></td>
+        <td class="table_spanner"><h3>{{ x[4] }}</h3></td>
           {% if x[3] == request.cookies.get('name') or request.cookies.get('name') == 'admin' %}
-          <td>
-            <form action='/delete/comment/{{ x[0] }}' method="POST">
+          <td class="table_id">
+
+            <form class="delete" action='/delete/comment/{{ x[0] }}' method="POST">
               <input type='submit' value='Delete'/>
             </form>
           </td>
-          {% endif %}
+        {% endif %}
       </tr>
     {% endif %}
   {% endfor %}
@@ -66,4 +110,3 @@
 </table>
 
 {% endblock %}
-

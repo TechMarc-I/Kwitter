@@ -35,18 +35,30 @@ host ="127.0.0.1", port="5432")
 ##	FOREIGN KEY(id) REFERENCES users(id),
 ##	FOREIGN KEY(post_id) REFERENCES posts(post_id)
 ##	);
-
+##  CREATE TABLE messages (
+## message_id bigserial,
+## sender varchar(50),
+## receiver varchar(50),
+## message varchar(280)
+##);
+##CREATE TABLE likes (
+##	post_id bigint,
+##	user_id bigint,
+##	FOREIGN KEY (post_id) REFERENCES posts(post_id),
+##	FOREIGN KEY (user_id) REFERENCES users(id)
+##);
 pepper = r'e_XT<tUB%"Gg4F\or57i{^&MAcAaiH@-z|T&y3w8#HTcp~8GcS9K{Y&x?ZC_dxi}*m<T0sr{in\"SDf2\_\6$*{gqe>E2yDZ]}XJ'
 
 
 
 @app.route('/')
 def home():
-    return render_template('/home.html')
+    return redirect('/home')
 
 @app.route('/create', methods = ['GET', 'POST'])
 def register():
     usr = request.cookies.get('name')
+    message = ""
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -58,12 +70,13 @@ def register():
         cur.execute("""SELECT FROM users WHERE email = %s""", (email,))
         email_used = cur.fetchone()
         if account:
-            print('Account already exists')
+            message = "That account name is already in use."
+            return render_template("/create.html", message = message)
         elif not validate_email(email, check_mx=True):
-            print('Invalid email address')
+            print("Email address invalid")
         elif email_used:
-            print('Email address already in use')
-
+            message = "That email has already been used."
+            return render_template("/create.html", message = message)
         elif password == confirm:
             salt = os.urandom(32)   #Generate random salt
             s = ""
@@ -81,10 +94,11 @@ def register():
             print("Password does not match confirmation, please try again.")
 
 
-    return render_template('/create.html')
+    return render_template('/create.html', message = message)
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
+    message = ""
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -105,9 +119,9 @@ def login():
             res.set_cookie('name', username, max_age = 60*60*2*600)
             return res
         else:
-            print("Incorrect username/password")
-
-    return render_template('/index.html')
+            message = "Incorrect username/password"
+            return render_template('/index.html', message = message)
+    return render_template('/index.html', message = message)
 
 @app.route('/cookie')
 def set_id():
@@ -151,7 +165,13 @@ def main():
     posts = cur.fetchall()
     cur.execute("""SELECT * FROM comments""")
     comments = cur.fetchall()
-    return render_template('/home.html', posts = posts, comments = comments)
+    cur.execute("""SELECT * FROM messages WHERE receiver = %s""", (request.cookies.get('name'),))
+    messages = cur.fetchall()
+    cur.execute("""SELECT * FROM likes""")
+    likes = cur.fetchall()
+    message_count = len(messages)
+
+    return render_template('/home.html', posts = posts, comments = comments, message_count = message_count, likes = likes)
 
 @app.route('/delete/<type>/<id_num>', methods = ['POST'])
 def remove(type, id_num):
@@ -170,6 +190,11 @@ def remove(type, id_num):
             con.commit()
             print("this delets a comment")
             return redirect('/home')
+        elif type == "message":
+            cur = con.cursor()
+            cur.execute("""DELETE FROM messages WHERE message_id = %s""", (id_num))
+            con.commit()
+            return redirect('/profile/' + request.cookies.get('name'))
     return redirect('/home')
 
 @app.route('/comment/<post_id>', methods = ['POST'])
@@ -189,9 +214,40 @@ def render(user):
     cur = con.cursor()
     cur.execute("""SELECT * FROM posts WHERE user_name = %s""", (user,))
     all_posts = cur.fetchall()
-    print(all_posts)
-    return render_template('/profile.html', all_posts = all_posts, user = user)
+    cur.execute("""SELECT * FROM messages WHERE receiver = %s""", (user,))
+    all_messages = cur.fetchall()
+    return render_template('/profile.html', all_posts = all_posts, all_messages = all_messages, user = user)
 
+@app.route('/message/<receiver>', methods = ["POST"])
+def send(receiver):
+    if request.method == "POST":
+        sender = request.cookies.get('name')
+        message = request.form['message']
+        cur = con.cursor()
+        cur.execute("""INSERT INTO messages(sender, receiver, message) VALUES(%s, %s, %s)""", (request.cookies.get('name'), receiver, message))
+        con.commit()
+    return redirect("/profile/" + receiver)
+
+@app.route('/like', methods=['GET', 'POST'])
+def like():
+    if request.method == "POST":
+        id = request.cookies.get('id')
+        post_id = int(request.form['post-id'])
+        cur = con.cursor()
+        cur.execute("""INSERT INTO likes(post_id, user_id) VALUES(%s, %s)""", (post_id, id))
+        con.commit()
+    return redirect('/home')
+
+@app.route('/unlike', methods=['GET', 'POST'])
+def unlike():
+    if request.method == "POST":
+        id = request.cookies.get('id')
+        post_id = int(request.form['post-id'])
+        cur = con.cursor()
+        cur.execute("""DELETE FROM likes WHERE post_id = %s AND user_id = %s""", (post_id, id))
+        con.commit()
+        print("unliked")
+    return redirect('/home')
 
 
 if __name__ == '__main__':
