@@ -35,6 +35,12 @@ host ="127.0.0.1", port="5432")
 ##	FOREIGN KEY(id) REFERENCES users(id),
 ##	FOREIGN KEY(post_id) REFERENCES posts(post_id)
 ##	);
+##CREATE TABLE likes (
+##	post_id bigint,
+##	user_id bigint,
+##	FOREIGN KEY (post_id) REFERENCES posts(post_id),
+##	FOREIGN KEY (user_id) REFERENCES users(id)
+##);
 
 pepper = r'e_XT<tUB%"Gg4F\or57i{^&MAcAaiH@-z|T&y3w8#HTcp~8GcS9K{Y&x?ZC_dxi}*m<T0sr{in\"SDf2\_\6$*{gqe>E2yDZ]}XJ'
 
