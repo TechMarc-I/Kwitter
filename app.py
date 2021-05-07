@@ -170,7 +170,7 @@ def remove(type, id_num):
         if type == "pst":
             cur = con.cursor()
             cur.execute("""DELETE FROM comments WHERE post_id = %s""", (id_num,))
-            con.commit()
+            cur.execute("""DELETE FROM likes WHERE post_id = %s""", (id_num,))
             cur.execute("""DELETE FROM posts WHERE post_id = %s""", (id_num,))
             con.commit()
             print("this deletes a post without comments")
