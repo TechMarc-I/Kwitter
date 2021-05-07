@@ -35,25 +35,18 @@ host ="127.0.0.1", port="5432")
 ##	FOREIGN KEY(id) REFERENCES users(id),
 ##	FOREIGN KEY(post_id) REFERENCES posts(post_id)
 ##	);
-<<<<<<< HEAD
-##  CREATE TABLE messages (
+## CREATE TABLE messages (
 ## message_id bigserial,
 ## sender varchar(50),
 ## receiver varchar(50),
 ## message varchar(280)
 ##);
-=======
->>>>>>> b7330cf7ac6b68e7537bdd9f3ceb1ee85b34e4df
 ##CREATE TABLE likes (
 ##	post_id bigint,
 ##	user_id bigint,
 ##	FOREIGN KEY (post_id) REFERENCES posts(post_id),
 ##	FOREIGN KEY (user_id) REFERENCES users(id)
 ##);
-<<<<<<< HEAD
-=======
-
->>>>>>> b7330cf7ac6b68e7537bdd9f3ceb1ee85b34e4df
 pepper = r'e_XT<tUB%"Gg4F\or57i{^&MAcAaiH@-z|T&y3w8#HTcp~8GcS9K{Y&x?ZC_dxi}*m<T0sr{in\"SDf2\_\6$*{gqe>E2yDZ]}XJ'
 
 
