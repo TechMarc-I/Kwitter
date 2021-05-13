@@ -2,11 +2,9 @@ from flask import Flask, render_template, request, make_response, redirect
 from validate_email import validate_email
 import psycopg2, hashlib, os
 
-
-
 app = Flask(__name__)
 
-con = psycopg2.connect(database="kwitter", user="troyalfelt", password="Matlock",
+con = psycopg2.connect(database="kwitter", user="ianmarcelo", password="DSD1002152",
 host ="127.0.0.1", port="5432")
 
 ##CREATE TABLE users (
