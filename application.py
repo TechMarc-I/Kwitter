@@ -5,7 +5,7 @@ import psycopg2, hashlib, os
 app = Flask(__name__)
 DATABASE_URL = os.environ.get('DATABASE_URL')
 con = psycopg2.connect(DATABASE_URL)
-print("It connected")
+
 
 ##CREATE TABLE users (
 ##	id bigserial,
@@ -158,16 +158,16 @@ def pst():
 
 @app.route('/home')
 def main():
-    ##cur = con.cursor()
-    ##cur.execute("""SELECT * FROM posts""")
-    ##posts = cur.fetchall()
-    ##cur.execute("""SELECT * FROM comments""")
-    ##comments = cur.fetchall()
-    ##cur.execute("""SELECT * FROM messages WHERE receiver = %s""", (request.cookies.get('name'),))
-    ##messages = cur.fetchall()
-    ##cur.execute("""SELECT * FROM likes""")
-    ##likes = cur.fetchall()
-    ##message_count = len(messages)
+    cur = con.cursor()
+    cur.execute("""SELECT * FROM posts""")
+    posts = cur.fetchall()
+    cur.execute("""SELECT * FROM comments""")
+    comments = cur.fetchall()
+    cur.execute("""SELECT * FROM messages WHERE receiver = %s""", (request.cookies.get('name'),))
+    messages = cur.fetchall()
+    cur.execute("""SELECT * FROM likes""")
+    likes = cur.fetchall()
+    message_count = len(messages)
 
     return render_template('/home.html')##, posts = posts, comments = comments, message_count = message_count, likes = likes)
 
