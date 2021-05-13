@@ -126,7 +126,7 @@ def set_id():
     username = request.cookies.get('name')
     res = make_response(redirect('/home'))
     cur = con.cursor()
-    cur.execute("""SELECT id FROM users WHERE user_name = %s""", (username))
+    cur.execute("""SELECT id FROM users WHERE user_name = %s""", (username,))
     tupl = cur.fetchone()
     id = str(tupl[0])
     res.set_cookie('id', id, max_age = 1200000000)
