@@ -165,7 +165,7 @@ def main():
     likes = cur.fetchall()
     message_count = len(messages)
 
-    return render_template('/home.html')##, posts = posts, comments = comments, message_count = message_count, likes = likes)
+    return render_template('/home.html', posts = posts, comments = comments, message_count = message_count, likes = likes)
 
 @app.route('/delete/<type>/<id_num>', methods = ['POST'])
 def remove(type, id_num):
