@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, make_response, redirect
 from validate_email import validate_email
-import psycopg2, hashlib, os
+##import psycopg2, hashlib, os
 
 app = Flask(__name__)
 
-con = psycopg2.connect(database="kwitter", user="ianmarcelo", password="DSD1002152",
-host ="127.0.0.1", port="5432")
+##con = psycopg2.connect(database="kwitter", user="ianmarcelo", password="DSD1002152",
+##host ="127.0.0.1", port="5432")
 
 ##CREATE TABLE users (
 ##	id bigserial,
@@ -158,18 +158,18 @@ def pst():
 
 @app.route('/home')
 def main():
-    cur = con.cursor()
-    cur.execute("""SELECT * FROM posts""")
-    posts = cur.fetchall()
-    cur.execute("""SELECT * FROM comments""")
-    comments = cur.fetchall()
-    cur.execute("""SELECT * FROM messages WHERE receiver = %s""", (request.cookies.get('name'),))
-    messages = cur.fetchall()
-    cur.execute("""SELECT * FROM likes""")
-    likes = cur.fetchall()
-    message_count = len(messages)
+    ##cur = con.cursor()
+    ##cur.execute("""SELECT * FROM posts""")
+    ##posts = cur.fetchall()
+    ##cur.execute("""SELECT * FROM comments""")
+    ##comments = cur.fetchall()
+    ##cur.execute("""SELECT * FROM messages WHERE receiver = %s""", (request.cookies.get('name'),))
+    ##messages = cur.fetchall()
+    ##cur.execute("""SELECT * FROM likes""")
+    ##likes = cur.fetchall()
+    ##message_count = len(messages)
 
-    return render_template('/home.html', posts = posts, comments = comments, message_count = message_count, likes = likes)
+    return render_template('/home.html')##, posts = posts, comments = comments, message_count = message_count, likes = likes)
 
 @app.route('/delete/<type>/<id_num>', methods = ['POST'])
 def remove(type, id_num):
