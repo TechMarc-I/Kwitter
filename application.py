@@ -4,7 +4,7 @@ import psycopg2, hashlib, os
 
 app = Flask(__name__)
 DATABASE_URL = os.environ.get('DATABASE_URL')
-con = psycopg2.connect('DATABASE_URL')
+con = psycopg2.connect(DATABASE_URL)
 print("It connected")
 
 ##CREATE TABLE users (
