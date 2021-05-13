@@ -126,12 +126,9 @@ def set_id():
     username = request.cookies.get('name')
     res = make_response(redirect('/home'))
     cur = con.cursor()
-    cur.execute("""SELECT id FROM users WHERE user_name = %s""", (username,))
+    cur.execute("""SELECT id FROM users WHERE user_name = %s""", (username))
     tupl = cur.fetchone()
     id = str(tupl[0])
-    print("here it is")
-    print(id)
-    print(type(id))
     res.set_cookie('id', id, max_age = 1200000000)
     return res
 
@@ -149,7 +146,6 @@ def pst():
         if request.cookies.get('name') != None and request.cookies.get('id') != None:
             username = request.cookies.get('name')
             id = int(request.cookies.get('id'))
-            print(id)
             post = request.form['post_space']
             cur = con.cursor()
             cur.execute("""INSERT INTO posts(id, user_name, post) VALUES(%s, %s, %s)""", (id, username, post))
