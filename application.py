@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, make_response, redirect
 from validate_email import validate_email
-##import psycopg2, hashlib, os
+import psycopg2, hashlib, os
 
 app = Flask(__name__)
-
-##con = psycopg2.connect(database="kwitter", user="ianmarcelo", password="DSD1002152",
-##host ="127.0.0.1", port="5432")
+DATABASE_URL = os.environ.get('DATABASE_URL')
+con = psycopg2.connect('DATABASE_URL')
+print("It connected")
 
 ##CREATE TABLE users (
 ##	id bigserial,
