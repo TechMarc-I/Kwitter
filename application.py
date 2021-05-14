@@ -3,8 +3,8 @@ from validate_email import validate_email
 import psycopg2, hashlib, os
 
 app = Flask(__name__)
-con = psycopg2.connect(database="kwitter", user="akesh201", password="Matlock",
-host ="127.0.0.1", port="5432")
+DATABASE_URL = os.environ.get('DATABASE_URL')
+con = psycopg2.connect(DATABASE_URL)
 
 
 ##CREATE TABLE users (
@@ -155,6 +155,7 @@ def pst():
 
 @app.route('/home')
 def main():
+    id = request.cookies.get('id')
     cur = con.cursor()
     cur.execute("""SELECT * FROM posts""")
     posts = cur.fetchall()
