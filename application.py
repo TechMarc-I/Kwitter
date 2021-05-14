@@ -3,8 +3,8 @@ from validate_email import validate_email
 import psycopg2, hashlib, os
 
 app = Flask(__name__)
-DATABASE_URL = os.environ.get('DATABASE_URL')
-con = psycopg2.connect(DATABASE_URL)
+con = psycopg2.connect(database="kwitter", user="akesh201", password="Matlock",
+host ="127.0.0.1", port="5432")
 
 
 ##CREATE TABLE users (
@@ -158,6 +158,15 @@ def main():
     cur = con.cursor()
     cur.execute("""SELECT * FROM posts""")
     posts = cur.fetchall()
+    is_liked = []
+    for post in posts:
+        cur.execute("""SELECT * FROM likes WHERE post_id = %s AND user_id = %s""", (post[0], id))
+        liked = cur.fetchone()
+        if liked:
+            is_liked.append(True)
+        else:
+            is_liked.append(False)
+
     cur.execute("""SELECT * FROM comments""")
     comments = cur.fetchall()
     cur.execute("""SELECT * FROM messages WHERE receiver = %s""", (request.cookies.get('name'),))
@@ -166,7 +175,7 @@ def main():
     likes = cur.fetchall()
     message_count = len(messages)
 
-    return render_template('/home.html', posts = posts, comments = comments, message_count = message_count, likes = likes)
+    return render_template('/home.html', posts = posts, comments = comments, message_count = message_count, likes = likes, is_liked = is_liked)
 
 @app.route('/delete/<type>/<id_num>', methods = ['POST'])
 def remove(type, id_num):
