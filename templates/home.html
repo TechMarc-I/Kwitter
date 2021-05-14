@@ -53,25 +53,20 @@
         </form>
       </td>
     {% elif request.cookies.get('name') != None %}
-      {% set checker = [] %}
-        {% for w in likes %}
-          {% if w[0] == i[0] %}
-            <td class="table_id">
-              <form action='/unlike' method="POST">
-                <input type='hidden' name='post-id' value='{{ i[0] }}'/>
-                <button type='submit' value='unlike'>Unlike</button>
-              </form>
-            </td>
-          {% set y = checker.append(1) %}
-         {% endif %}
-      {% endfor %}
-      {% if checker|length == 0 %}
-      <td class="table_id">
-        <form action="/like" method="POST">
-          <input type='hidden' name='post-id' value='{{ i[0]}}'/>
-          <button type="submit" value="like">Like</button>
-        </form>
-      </td>
+      {% if is_liked[loop.index0] %}
+        <td class="table_id">
+          <form action='/unlike' method="POST">
+            <input type='hidden' name='post-id' value='{{ i[0] }}'/>
+            <button type='submit' value='unlike'>Unlike</button>
+          </form>
+        </td>
+      {% else %}
+        <td class="table_id">
+          <form action="/like" method="POST">
+            <input type='hidden' name='post-id' value='{{ i[0]}}'/>
+            <button type="submit" value="like">Like</button>
+          </form>
+        </td>
       {% endif %}
 
     {% endif %}
