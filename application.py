@@ -71,7 +71,8 @@ def register():
             message = "That account name is already in use."
             return render_template("/create.html", message = message)
         elif not validate_email(email, check_mx=True):
-            print("Email address invalid")
+            message = "Email address is invalid"
+            return render_template("/create.html", message = message)
         elif email_used:
             message = "That email has already been used."
             return render_template("/create.html", message = message)
